@@ -1,18 +1,16 @@
 # Minecraft Modpack Server — Docker
+
 [![Docker Hub](https://img.shields.io/docker/pulls/jstn9/minecraft-server)](https://hub.docker.com/r/jstn9/minecraft-server)
 
-A containerized Minecraft modpack server built with Docker and automated via GitHub Actions CI/CD pipeline.
+Containerized Minecraft modpack server with CI/CD and monitoring.
 
-**Docker Hub:** `docker pull jstn9/minecraft-server:latest`
 ## Requirements
 
 - Docker 20.10+
 - Docker Compose 2.0+
-- At least 4GB of free RAM
+- 4GB+ RAM
 
 ## Quick Start
-
-**Using Docker Compose (recommended):**
 
 ```bash
 git clone https://github.com/jstin9/minecraft-server-docker.git
@@ -20,88 +18,53 @@ cd minecraft-server-docker
 docker compose up -d
 ```
 
-**Using Docker directly:**
-
-```bash
-docker run -d \
-  -p 25565:25565 \
-  -p 24454:24454/udp \
-  -v mc-data:/data \
-  jstn9/minecraft-server:latest
-```
-
-Server will be available at `localhost:25565` after startup. First launch takes several minutes — the modpack is downloaded automatically.
+Server starts at `localhost:25565`. First launch downloads the modpack automatically.
 
 ## Configuration
 
-All settings are passed as environment variables. Override them in `docker-compose.yml` or via `-e` flag.
+Key environment variables:
 
 | Variable | Default | Description |
 |---|---|---|
-| `EULA` | `TRUE` | Minecraft End User License Agreement |
-| `MEMORY` | `4G` | Java heap size (e.g. `2G`, `6G`) |
-| `MODPACK_PLATFORM` | `MODRINTH` | Modpack platform: `MODRINTH`, `AUTO_CURSEFORGE` |
+| `MEMORY` | `4G` | Java heap size |
 | `MODRINTH_MODPACK` | `fabulously-optimized` | Modpack slug from modrinth.com |
 | `MODRINTH_VERSION` | latest stable | Specific modpack version |
-| `MODRINTH_PROJECTS` | — | Extra mods to add (`slug` or `slug:version`) |
-| `MODRINTH_EXCLUDE_FILES` | — | Mods to exclude from the modpack |
-
-**Example — changing the modpack:**
-
-```yaml
-environment:
-  MODPACK_PLATFORM: "MODRINTH"
-  MODRINTH_MODPACK: "all-the-mods-9"
-  MEMORY: 6G
-```
-
-## Data Persistence
-
-World data, player data, and server configs are stored in a named Docker volume `mc-data`. Data persists across container restarts and image updates.
-
-To back up your world:
-
-```bash
-docker run --rm \
-  -v mc-data:/data \
-  -v $(pwd):/backup \
-  ubuntu tar czf /backup/world-backup.tar.gz /data/world
-```
-
-To remove all data and start fresh:
-
-```bash
-docker compose down -v
-```
+| `MODRINTH_PROJECTS` | — | Extra mods (`slug` or `slug:version`) |
+| `MODRINTH_EXCLUDE_FILES` | — | Mods to exclude |
 
 ## Ports
 
 | Port | Protocol | Description |
 |---|---|---|
-| `25565` | TCP | Minecraft game port |
-| `24454` | UDP | Simple Voice Chat mod |
+| `25565` | TCP | Minecraft |
+| `24454` | UDP | Simple Voice Chat |
+| `9090` | TCP | Prometheus |
+| `3000` | TCP | Grafana |
+
+## Monitoring
+
+Prometheus and Grafana are included in the stack.
+
+Open Grafana at `http://localhost:3000` (admin / admin), add Prometheus as a data source (`http://prometheus:9090`), and import dashboard ID `1860` for CPU, RAM, disk, and network metrics.
+
+![Grafana Dashboard](assets/grafana-dashboard.png)
+
+## Data Persistence
+
+World data is stored in a Docker volume and survives container restarts. To wipe everything and start fresh:
+
+```bash
+docker compose down -v
+```
 
 ## CI/CD
 
-The repository includes a GitHub Actions pipeline that runs on every push to `main`:
-
-1. Validates `docker-compose.yml` syntax
-2. Lints `Dockerfile` with hadolint
-3. Builds the Docker image and pushes it to Docker Hub
-
-## Project Structure
-
-```
-minecraft-server-docker/
-├── .github/
-│   └── workflows/
-│       └── ci.yml          # GitHub Actions pipeline
-├── Dockerfile              # image definition
-├── docker-compose.yml      # local setup and example configuration
-└── README.md
-```
+GitHub Actions runs on every push to `main`:
+- validates `docker-compose.yml`
+- lints `Dockerfile` via hadolint
+- builds and pushes the image to Docker Hub
 
 ## Based On
 
-- [itzg/minecraft-server](https://github.com/itzg/docker-minecraft-server) — the base Docker image
-- [Fabulously Optimized](https://modrinth.com/modpack/fabulously-optimized) — default modpack
+- [itzg/minecraft-server](https://github.com/itzg/docker-minecraft-server)
+- [Fabulously Optimized](https://modrinth.com/modpack/fabulously-optimized)
