@@ -1,4 +1,4 @@
-FROM itzg/minecraft-server:latest
+FROM itzg/minecraft-server:java25
 
 LABEL maintainer="jstin9"
 LABEL description="Minecraft modpack server"
