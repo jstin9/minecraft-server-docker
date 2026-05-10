@@ -1,7 +1,9 @@
 # Minecraft Modpack Server — Docker
+[![Docker Hub](https://img.shields.io/docker/pulls/jstn9/minecraft-server)](https://hub.docker.com/r/jstn9/minecraft-server)
 
 A containerized Minecraft modpack server built with Docker and automated via GitHub Actions CI/CD pipeline.
 
+**Docker Hub:** `docker pull jstn9/minecraft-server:latest`
 ## Requirements
 
 - Docker 20.10+
