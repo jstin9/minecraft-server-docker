@@ -3,6 +3,10 @@ name: Validate Docker Compose
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - '*.md'
+      - '.gitignore'
   pull_request:
     branches: [main]
 
