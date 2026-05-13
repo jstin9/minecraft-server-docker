@@ -57,6 +57,8 @@ World data is stored in a Docker volume and survives container restarts. To wipe
 docker compose down -v
 ```
 
+To create a backup of your world into your home directory, run `backup.sh`. It stops the Minecraft container, archives the world data, and saves the backup in `~/mc-backups` before starting the server again.
+
 ## CI/CD
 
 GitHub Actions runs on every push to `main`:
