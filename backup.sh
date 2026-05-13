@@ -1,7 +1,7 @@
 #!/bin/bash
 
 COMPOSE_FILE=docker-compose.yml
-BACKUP_DIR=$HOME/backups
+BACKUP_DIR=$HOME/mc-backups
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
 BACKUP_FILE="$BACKUP_DIR/world-$DATE.tar.gz"
 
