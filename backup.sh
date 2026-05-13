@@ -20,7 +20,7 @@ fi
 
 docker run --rm \
 	--user root \
-	-v my-first-compose_mc-data:/data \
+	-v minecraft-server-docker_mc-data:/data \
 	-v $BACKUP_DIR:/backup:z \
 	ubuntu tar czf /backup/world-$DATE.tag.gz /data/world
 if [ $? -eq 0 ]; then
