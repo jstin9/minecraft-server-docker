@@ -22,7 +22,7 @@ docker run --rm \
 	--user root \
 	-v minecraft-server-docker_mc-data:/data \
 	-v $BACKUP_DIR:/backup:z \
-	ubuntu tar czf /backup/world-$DATE.tag.gz /data/world
+	ubuntu tar czf /backup/world-$DATE.tar.gz /data/world
 if [ $? -eq 0 ]; then
 	echo "Backup saved: $BACKUP_FILE"
 else
